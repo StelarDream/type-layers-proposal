@@ -70,8 +70,9 @@ Resolution rules (consistent with current `__init__` behavior, verified in Pyrig
 |---|---|---|
 | `key: T` | a value `x` | `T = type(x)` |
 | `key: type[T]` | a type `X` | `T = X` |
+| `key: tuple[type[T], ...]` | `(X, ...)` | `T = X` |
 
-> **Note:** that the key: T path (resolve from value) is intentionally load-bearing for PEP C — it is the bridge to value-level inference, even though value-level TypeVars are out of scope here.
+> **Note:** The `key: T` path (resolve from value) is intentionally load-bearing for PEP C — it is the bridge to value-level inference, even though value-level TypeVars are out of scope here.
 
 ### Default behavior (no explicit `__class_getitem__`)
 
