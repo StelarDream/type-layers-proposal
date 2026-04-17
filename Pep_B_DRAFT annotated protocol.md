@@ -54,6 +54,8 @@ This is the same philosophy as dunder methods: `__len__` does not require regist
 
 ### The namespace
 
+This PEP formally specifies __annotated_type__ and __annotated_mutable__. Other tags are left to implementors.
+
 `__annotated_*__` is a reserved annotation namespace on class bodies. Any class-level annotation whose name starts with `__annotated_` and ends with `__` participates in this protocol.
 
 Tags are declared as **annotations**, not as instance attributes. A custom `__class_getitem__` may optionally set them as instance attributes at runtime for introspection, following the pattern already used by `dataclasses.InitVar`:
@@ -65,8 +67,6 @@ class InitVar:
 ```
 
 Checkers read the annotation. Runtime reads the instance attribute. No conflict.
-
-However this PEP formally specifies __annotated_type__ and __annotated_mutable__. Other tags are left to implementors.
 
 ### `__annotated_type__`
 
@@ -107,11 +107,9 @@ class Final[T]:
     __annotated_mutable__: Literal[False]
 ```
 
-`Literal[False]` means: once bound, the variable may not be reassigned. This is exactly `Final`'s mutation semantic, now expressible without hardcoding.
+`Literal[False]` (using Literal from typing, available since Python 3.8) means: once bound, the variable may not be reassigned. This is exactly `Final`'s mutation semantic, now expressible without hardcoding.
 
 Default (tag absent) is `Literal[True]` — mutable, current behavior preserved.
-
-(using Literal from typing, available since Python 3.8)
 
 ### Fallback rule
 
