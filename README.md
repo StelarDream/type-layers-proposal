@@ -10,5 +10,7 @@ I (Stelar) have dyslexia. LLMs help me structure, correct, and shape my ideas in
 | B | The `__annotated_*__` protocol | A |
 | C | `Val` and value-level TypeVars | A |
 | D | `Map` and bounded `TypeVarTuple` | A, C |
+
 Start with PEP A — it is the most targeted and immediately actionable.
-Feedback welcome via GitHub Issues.
+
+**Feedback welcome via GitHub Issues.**
