@@ -1,7 +1,7 @@
 # PEP B Draft — The `__annotated_*__` Protocol
 
 > **Status:** Idea / Draft / Pre-proposal
-> **Depends on:** PEP A (TypeVar resolution from `__class_getitem__` signatures)
+> **Enhanced by:** PEP A (enables `__annotated_type__` to bind T via `__class_getitem__`)
 > **Tested against:** Pyright (other checkers believed to share the same gap, unverified)
 > **Related ideas:** PEP C (Val and value-level TypeVars), PEP D (Map and bounded TypeVarTuple)
 
@@ -173,6 +173,18 @@ class Quantity[T]:
 # The library's checker reads it for dimensional validation
 ```
 
+### Setting `__annotated_type__` at runtime via `__class_getitem__`
+
+```python
+class Wrapper[T]:
+    __annotated_type__: type[T]  # checker reads this
+
+    def __class_getitem__(cls, t: type[T]):
+        instance = super().__class_getitem__(t)
+        instance.__annotated_type__ = t  # runtime sets it for introspection
+        return instance
+```
+
 ---
 
 ## Out of Scope
@@ -191,7 +203,7 @@ PEP A allows `Callable.__class_getitem__` to validate its signature shape. The *
 
 ## Interactions with Related Ideas
 
-- **PEP A** (`__class_getitem__` signatures): Required prerequisite. PEP B's `__annotated_type__` is most useful once subscript arguments are validated — otherwise the type `T` in `__annotated_type__: type[T]` has nothing to bind to.
+- **PEP A** (`__class_getitem__` signatures): Not required, but composes naturally. When PEP A is present, `__annotated_type__: type[T]` can bind T from subscript arguments, enabling the full `Quantity[float, ...]` pattern.
 - **PEP C** (`Val` and value-level TypeVars): `__annotated_type__: type[T]` where `T: Val[...]` would allow wrapper semantics over value-level types.
 - **PEP D** (`Map` and bounded `TypeVarTuple`): Same extension applies to variadic wrappers.
 
