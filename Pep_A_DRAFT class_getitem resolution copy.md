@@ -147,7 +147,7 @@ This change is fully backward compatible:
 
 - Classes without explicit `__class_getitem__` are unaffected.
 - Classes with explicit `__class_getitem__` currently have their subscript arguments **ignored** by checkers. Checkers moving to validate them may surface new errors in previously unchecked code — but those are real errors, not regressions.
-- The annotation-wins rule ensures construction-time inference does not break existing annotated code.
+- Existing annotated code is unaffected — explicit annotations always take precedence over inferred TypeVar resolution.
 
 ---
 

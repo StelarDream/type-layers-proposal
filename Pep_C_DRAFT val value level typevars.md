@@ -135,6 +135,34 @@ The checker reads:
 
 The TypeVar declaration (`Lo: Val[T]`) and the `__class_getitem__` signature (`key: tuple[type[T], T, T]`) agree — no conflict.
 
+### Interaction with `__annotated_type__` (PEP B)
+
+When a class is parameterized with a `Val`-bound TypeVar, the declaration of `__annotated_type__` determines how the checker treats the annotated variable. The wrapping level matters:
+
+```python
+class Foo[T: Val[int]]:
+    __annotated_type__: T  # ✗ — T is a value, not a type. Invalid as annotation.
+
+x: Foo[22]  # this becomes nonsensical ("x is an instance of an instance of an instance of int")
+```
+
+```python
+class Bar[T: Val[int]]:
+    __annotated_type__: type[T]  # T is a value, type[T] is value-oriented
+
+x: Bar[34] # this is also nonsensical — equivalent to 'x: 34' ("x is an instance of an instance of int")
+x: Literal[Bar[34]] # Bar[34] is only valid only where a Val is expected — not as a standard variable annotation
+```
+
+```python
+class Baz[T: Val[int]]:
+    __annotated_type__: type[type[T]]  # lifts T (value) → type(T) (its type)
+
+x: Baz[34] = 223  # ✓ — equivalent to 'x: int' ("x is an instance of int")
+```
+
+The canonical form for a `Val`-parameterized wrapper that should be usable as a standard variable annotation is `type[type[T]]`. Each additional `type[...]` wrapping lifts one level: value → its type → a valid annotation type.
+
 ### TypeAlias revisited
 
 With `Val` defined, the original motivation now works:

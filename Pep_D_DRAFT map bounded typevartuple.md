@@ -184,7 +184,7 @@ type TypedRow[*V: Val[Scalar]] = tuple[*Map[Literal, V]]
 row: TypedRow[1, 2, 3]   # tuple[Literal[1], Literal[2], Literal[3]]
 ```
 
-> This pattern requires A, C and D PEPs working together: PEP A (TypeVar resolution from `__class_getitem__`), PEP C (`Val` and value-level TypeVars), and PEP D (`Map` and bounded `TypeVarTuple`). None of the three alone is sufficient.
+> This pattern requires PEPs A, C and D working together: PEP A (TypeVar resolution from `__class_getitem__`), PEP C (`Val` and value-level TypeVars), and PEP D (`Map` and bounded `TypeVarTuple`). None of the three alone is sufficient.
 
 ---
 
