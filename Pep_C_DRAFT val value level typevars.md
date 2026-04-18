@@ -128,7 +128,7 @@ class ValueRange[T: int | float, Lo: Val[T], Hi: Val[T]]:
         return cls(t, lo, hi)
 ```
 
-or alternatively for better resolution :
+Alternatively, for better per-TypeVar resolution:
 
 ```python
 class ValueRange[T: int | float, Lo: Val[T], Hi: Val[T]]:
@@ -137,12 +137,16 @@ class ValueRange[T: int | float, Lo: Val[T], Hi: Val[T]]:
         return cls(t, lo, hi)
 ```
 
+Here the checker resolves `T`, `Lo`, and `Hi` each from their own argument independently, rather than validating `Lo` and `Hi` solely against `T`. This is the preferred form when `Lo` and `Hi` need to be tracked independently across methods or referenced in 
+
 The checker reads:
 - `key[0]: type[T]` → `T = float` (from `float`)
 - `key[1]: T` → `Lo = float` (value of type T)
 - `key[2]: T` → `Hi = float` (value of type T)
 
-The TypeVar declaration (`Lo: Val[T]`) and the `__class_getitem__` signature (`key: tuple[type[T], T, T]`) agree — no conflict.
+The TypeVar declaration (`Lo: Val[T]`) and the `__class_getitem__` signature (`key: tuple[type[T], T, T]`) agree — no conflict, but `Lo` and `Hi` are not independently resolved unless checkers match argument shape to TypeVar position.
+
+`class ValueRange[T: int | float, Lo: Val[T], Hi: Val[T]]` with `tuple[type[T], type[Lo], type[Hi]]` guarantees independent resolution of all three.
 
 ### Interaction with `__annotated_type__` (PEP B)
 
