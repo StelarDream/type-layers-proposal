@@ -128,6 +128,15 @@ class ValueRange[T: int | float, Lo: Val[T], Hi: Val[T]]:
         return cls(t, lo, hi)
 ```
 
+or alternatively for better resolution :
+
+```python
+class ValueRange[T: int | float, Lo: Val[T], Hi: Val[T]]:
+    def __class_getitem__(cls, key: tuple[type[T], type[Lo], type[Hi]]) -> ValueRange[T]:
+        t, lo, hi = key
+        return cls(t, lo, hi)
+```
+
 The checker reads:
 - `key[0]: type[T]` → `T = float` (from `float`)
 - `key[1]: T` → `Lo = float` (value of type T)
