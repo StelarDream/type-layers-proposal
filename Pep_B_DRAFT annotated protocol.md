@@ -111,6 +111,21 @@ class Final[T]:
 
 Default (tag absent) is `Literal[True]` — mutable, current behavior preserved.
 
+### `__annotated_type__: None` — transparent markers
+
+Declaring `__annotated_type__: None` signals that this class is a transparent marker — it contributes nothing to the type seen by the checker. A class annotated with it is treated as if it weren't there:
+
+```python
+class Deprecated:
+    __annotated_type__: None
+
+x: int | Deprecated  # checker sees x: int
+```
+
+This is unambiguous because `None` the value is already distinct from `type[None]` (NoneType) in Python's type system. No new machinery is required — it is a natural extension of the `__annotated_type__` protocol.
+
+This allows library authors to define annotation markers for documentation, linting, or tooling purposes without polluting the type seen by standard checkers.
+
 ### Fallback rule
 
 If a class does not declare `__annotated_type__`, checkers fall back to current behavior: a bare type in an annotation is that type. No existing code is affected.

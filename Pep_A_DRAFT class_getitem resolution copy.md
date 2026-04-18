@@ -148,6 +148,7 @@ This change is fully backward compatible:
 - Classes without explicit `__class_getitem__` are unaffected.
 - Classes with explicit `__class_getitem__` currently have their subscript arguments **ignored** by checkers. Checkers moving to validate them may surface new errors in previously unchecked code — but those are real errors, not regressions.
 - Existing annotated code is unaffected — explicit annotations always take precedence over inferred TypeVar resolution.
+- Library authors whose `__class_getitem__` currently accepts arbitrary or loosely-typed arguments may see new validation errors once checkers adopt this proposal. This is intentional — those signatures were previously unchecked, not valid. Adding explicit type annotations to `__class_getitem__` is the migration path, and is consistent with how `__init__` signatures are already expected to be typed.
 
 ---
 
@@ -234,3 +235,5 @@ This makes intent visible — explicit over implicit, consistent with Python's g
 Type checkers predate PEP 560. They built their own internal representation of generic classes before `__class_getitem__` existed, and accumulated special cases for builtins (`list`, `dict`, `Optional`, `Final`, etc.) over time. The gap is a historical artifact, not a deliberate design choice.
 
 As of the time of writing, Pyright parses `__class_getitem__` and recognizes `cls` as the first argument, but does not use the method's signature for subscript validation or TypeVar resolution. The delta between current behavior and this proposal is narrow — the method is already parsed; it just needs to be used.
+
+This proposal asks checkers to treat `__class_getitem__` as a first-class generic contract, not a runtime implementation detail.

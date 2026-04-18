@@ -92,6 +92,8 @@ PEP A established two resolution paths for `__class_getitem__`:
 | `key: type[T]` | a type `X` | `T = X` |
 | `key: T` | a value `x` | `T = type(x)` — i.e. `int`, not `Literal[23]` |
 
+This widen-by-default behavior is intentional. The common case for value-level generics is constraining the *type* of a value, not its specific value. Preserving `Literal[23]` instead of widening to `int` would make the default surprisingly strict and break the analogy with how `__init__` resolution already works. Opt-in `Literal[T]` exists precisely for the rare case where the specific value matters.
+
 To preserve the specific value rather than widening to its type, see the Literal preservation section below.
 
 `Val` TypeVars follow the `key: T` path — the checker infers the type of the value, not the specific value:
@@ -175,6 +177,8 @@ x: Baz[34] = 223  # ✓ — equivalent to 'x: int' ("x is an instance of int")
 ```
 
 The canonical form for a `Val`-parameterized wrapper that should be usable as a standard variable annotation is `type[type[T]]`. Each additional `type[...]` wrapping lifts one level: value → its type → a valid annotation type.
+
+The double-wrapping of `type[type[T]]` is an intentional tradeoff, not a design oversight. `T` in a `Val`-bound context is a value, so each `type[...]` wrapping lifts one level — value → its type → a valid annotation type. This is the natural consequence of `Val` and `__annotated_type__` being independent primitives that compose. A dedicated shorthand for this pattern could be introduced in a future proposal if it proves common enough to warrant one.
 
 ### TypeAlias revisited
 
