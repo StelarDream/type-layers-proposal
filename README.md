@@ -21,10 +21,10 @@ This repository contains **four interconnected PEP draft proposals** that progre
 
 ## Key Benefits
 
-- 🎯 **More Precise Types**: Better capture of generic class constraints and relationships
-- 🔗 **Value-Type Integration**: Connect runtime values with compile-time type information
-- 📐 **Advanced Patterns**: Enable type-level programming patterns previously impossible in Python
-- 🧩 **Backward Compatible**: All proposals are designed with compatibility in mind
+-  **More Precise Types**: Better capture of generic class constraints and relationships
+-  **Value-Type Integration**: Connect runtime values with compile-time type information
+-  **Advanced Patterns**: Enable type-level programming patterns previously impossible in Python
+-  **Backward Compatible**: All proposals are designed with compatibility in mind
 
 ## Proposal Details
 
@@ -60,9 +60,9 @@ These proposals are designed for:
 
 We welcome feedback, questions, and discussions on these proposals:
 
-- 📝 **Open an Issue** for questions, suggestions, or alternative approaches
-- 💬 **Comment on existing issues** to join ongoing discussions
-- ✨ **Share use cases** that demonstrate the need for these features
+-  **Open an Issue** for questions, suggestions, or alternative approaches
+-  **Comment on existing issues** to join ongoing discussions
+-  **Share use cases** that demonstrate the need for these features
 
 ## Disclaimer
 
