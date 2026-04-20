@@ -169,6 +169,8 @@ x: Bar[34] # this is also nonsensical — equivalent to 'x: 34' ("x is an instan
 x: Literal[Bar[34]] # Bar[34] is only valid only where a Val is expected — not as a standard variable annotation
 ```
 
+> **Note:** `type[T]` where `T` is a `Val`-bound TypeVar is still one level short — it gives `type[34]` (the type of a value), not `type[int]` (a valid annotation type). One more `type[...]` wrapping is needed to reach a type the checker can use for variable annotations. This is the lifting rule: each `type[...]` raises one level, and `Val` starts one level lower than a normal TypeVar.
+
 ```python
 class Baz[T: Val[int]]:
     __annotated_type__: type[type[T]]  # lifts T (value) → type(T) (its type)
@@ -200,7 +202,7 @@ x: Clamped[float, 0.0, 1.0]   # ✓ — T = float, Lo = float, Hi = float
 class Percentage[V: Val[float]]:
     # V is a float value. __annotated_type__ (PEP B) tells the checker
     # to treat Percentage[V] as float-compatible.
-    __annotated_type__: type[V]
+    __annotated_type__: type[type[V]]
 
     def __class_getitem__(cls, key: V) -> Percentage[V]:
         assert 0.0 <= key <= 1.0
